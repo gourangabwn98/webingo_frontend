@@ -1,16 +1,32 @@
-# React + Vite
+# Real-Time Collaborative Project Management Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack MERN application with real-time collaboration, role-based access control, and file uploads.
 
-Currently, two official plugins are available:
+## Live Demo
+- **Frontend**: [https://webingo-frontend.vercel.app](https://webingo-frontend.vercel.app)
+- **Backend**: [https://webingo-assignment.onrender.com](https://webingo-assignment.onrender.com)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features Implemented
+- JWT Authentication + Refresh Tokens
+- Role-Based Access Control (Project Admin, Team Member, Viewer)
+- Multi-tenant Project Management
+- Advanced Task CRUD + Filtering + Bulk Operations
+- Real-time updates using Socket.io
+- File upload (Cloudinary)
+- Responsive UI with Tailwind + React
 
-## React Compiler
+## Tech Stack
+- **Backend**: Node.js, Express, Socket.io, Mongoose, JWT
+- **Frontend**: React, Redux Toolkit, Socket.io-client, Tailwind
+- **Database**: MongoDB Atlas
+- **File Storage**: Cloudinary
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Setup Instructions (Local)
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone the repo
+2. Backend:
+   ```bash
+   cd backend
+   npm install
+   cp .env.example .env
+   npm run dev
