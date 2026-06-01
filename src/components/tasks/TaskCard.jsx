@@ -6,7 +6,7 @@ import { TASK_STATUS, TASK_PRIORITY } from '../../utils/constants'
 import { formatDate, clsx } from '../../utils/helpers'
 import { useNavigate, useParams } from 'react-router-dom'
 
-export default function TaskCard({ task }) {
+export default function TaskCard({ task, canEdit = true }) {
   const dispatch  = useDispatch()
   const navigate  = useNavigate()
   const { id }    = useParams()
@@ -25,6 +25,7 @@ export default function TaskCard({ task }) {
       onClick={() => navigate(`/projects/${id}/tasks/${task._id}`)}
     >
       <div className="flex items-start gap-3">
+       {canEdit && (
         <input
           type="checkbox"
           checked={isSelected}
@@ -32,6 +33,7 @@ export default function TaskCard({ task }) {
           onClick={(e) => e.stopPropagation()}
           className="mt-1 w-4 h-4 rounded border-white/20 bg-surface-800 accent-brand-500 cursor-pointer flex-shrink-0"
         />
+       )}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
             <p className="font-medium text-slate-200 text-sm leading-snug group-hover:text-white transition-colors truncate">{task.title}</p>

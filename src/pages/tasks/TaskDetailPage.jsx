@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import { useProjectRole } from '../../hooks/useProjectRole'
 import { getTaskApi, updateTaskApi, deleteTaskApi } from '../../features/tasks/tasksApi'
 import { getProjectApi } from '../../features/projects/projectsApi'
 import { updateTaskInList } from '../../features/tasks/tasksSlice'
@@ -25,7 +26,7 @@ export default function TaskDetailPage() {
   const [loading,    setLoading]    = useState(true)
   const [showEdit,   setShowEdit]   = useState(false)
   const [updating,   setUpdating]   = useState(false)
-
+const { canEdit } = useProjectRole(project)
   useEffect(() => {
     joinTask(taskId)
     loadData()
@@ -97,9 +98,13 @@ export default function TaskDetailPage() {
         <div className="flex items-start justify-between gap-4">
           <h1 className="font-display text-2xl font-bold text-white flex-1">{task.title}</h1>
           <div className="flex items-center gap-2">
-            <Button size="sm" variant="outline" onClick={() => setShowEdit(true)}>Edit</Button>
-            <Button size="sm" variant="danger" onClick={handleDelete}>Delete</Button>
-          </div>
+  {canEdit && (
+    <Button size="sm" variant="outline" onClick={() => setShowEdit(true)}>Edit</Button>
+  )}
+  {canEdit && (
+    <Button size="sm" variant="danger" onClick={handleDelete}>Delete</Button>
+  )}
+</div>
         </div>
 
         {/* Badges */}
@@ -136,7 +141,7 @@ export default function TaskDetailPage() {
         </div>
 
         {/* Quick Status Change */}
-        <div className="border-t border-white/5 pt-4">
+        {/* <div className="border-t border-white/5 pt-4">
           <p className="text-xs text-slate-600 mb-2">Quick Status</p>
           <div className="flex flex-wrap gap-2">
             {Object.entries(TASK_STATUS).map(([key, val]) => (
@@ -149,7 +154,27 @@ export default function TaskDetailPage() {
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
+        {/* Quick Status — only for canEdit */}
+{canEdit && (
+  <div className="border-t border-white/5 pt-4">
+    <p className="text-xs text-slate-600 mb-2">Quick Status</p>
+    <div className="flex flex-wrap gap-2">
+      {Object.entries(TASK_STATUS).map(([key, val]) => (
+        <button
+          key={key}
+          onClick={() => handleQuickStatus(key)}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all
+            ${task.status === key
+              ? `${val.bg} ${val.color} ${val.border}`
+              : 'border-white/10 text-slate-500 hover:border-white/20 hover:text-slate-300'}`}
+        >
+          {val.label}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
 
         <div className="text-xs text-slate-600 border-t border-white/5 pt-3">
           Created {timeAgo(task.createdAt)} · Updated {timeAgo(task.updatedAt)}
@@ -167,21 +192,24 @@ export default function TaskDetailPage() {
       </div>
 
       {/* Edit Modal */}
-      <Modal open={showEdit} onClose={() => setShowEdit(false)} title="Edit Task" size="lg">
-        <TaskForm
-          onSubmit={handleUpdate}
-          loading={updating}
-          defaultValues={{
-            title:       task.title,
-            description: task.description,
-            status:      task.status,
-            priority:    task.priority,
-            dueDate:     task.dueDate?.slice(0, 10),
-            assignees:   task.assignees?.map((a) => a._id),
-          }}
-          members={project?.members}
-        />
-      </Modal>
+     {/* Only show edit modal if canEdit */}
+{canEdit && (
+  <Modal open={showEdit} onClose={() => setShowEdit(false)} title="Edit Task" size="lg">
+    <TaskForm
+      onSubmit={handleUpdate}
+      loading={updating}
+      defaultValues={{
+        title:       task.title,
+        description: task.description,
+        status:      task.status,
+        priority:    task.priority,
+        dueDate:     task.dueDate?.slice(0, 10),
+        assignees:   task.assignees?.map((a) => a._id),
+      }}
+      members={project?.members}
+    />
+  </Modal>
+)}
     </div>
   )
 }
